@@ -18,4 +18,5 @@ int Count_Burn(char* p_char)
 int main(int argc, char* argv[])
 {
 	exit(Count_Burn(argv[1]));
+	
 }

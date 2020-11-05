@@ -1,21 +1,25 @@
 #include<stdio.h>
+#include <stdlib.h>
 #include<string.h>
 
 
 int main(int argc, char* argv[])
 {
-	FILE *p_input = NULL; errno_t err; char size='\0'; int* forest_current; int* forest_next;
-	char num_of_iter='\0';
-	int iter;
+	FILE *p_input = NULL; errno_t err; char chunk[50]; int* forest_current; int* forest_next;
 	if ((err = fopen_s(&p_input, argv[1], "r")) != 0)
 	{
 		printf("File was not opened\n");
+		exit(999);
 	}
-	fgets(size, 1, p_input);
-	forest_current = (int*)malloc(sizeof(int) * atoi(size) * atoi(size));
-	forest_next = (int*)malloc(sizeof(int) * atoi(size) * atoi(size));
-	fgets(num_of_iter, 1, p_input);
-	iter = atoi(num_of_iter);
-	printf("%d\n", iter);
-	
+	fgets(chunk, 50, p_input);
+	int size_forest = atoi(chunk);
+	forest_current = (int*)malloc(sizeof(int) * size_forest * size_forest );
+	forest_next = (int*)malloc(sizeof(int) * size_forest * size_forest);
+	fgets(chunk, 50, p_input);
+	int num_of_iter = atoi(chunk);
+	printf("%d, %d\n", size_forest, num_of_iter);
+	fclose (p_input);
+	free(forest_current);
+	free(forest_next);
+	return 0;
 }
