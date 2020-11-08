@@ -117,20 +117,16 @@ void file_2_arr(FILE *file,char *forest_current,int dimen)
 {
 	int i = 0;
 	char *buffer = NULL;
-	buffer =(char*)malloc(sizeof(char) * (2*dimen-1));
+	buffer =(char*)malloc(sizeof(char) * (dimen*dimen));
 	const char* delim = ",";
 	while (fgets(buffer, sizeof buffer, file))
 	{
 		char* token = strtok(buffer, delim);
 		while (token != NULL)
 		{
-			printf("%s", token);
 			strcpy(forest_current, token);
 			token = strtok(NULL, delim);
 			forest_current++;
-			if (i == 4)
-				break;
-			i++;
 		}
 	}
 	
@@ -139,7 +135,9 @@ void file_2_arr(FILE *file,char *forest_current,int dimen)
 
 int main(int argc, char* argv[])
 {
-	FILE *p_input = NULL; errno_t err; char chunk[50]; char* forest_current; char* forest_next;
+	FILE* p_input = NULL; errno_t err; char chunk[50]; char* forest_current; char* forest_next; char* p_temp;
+	int iter_counter = 0;
+	int i = 0, j = 0;
 	if ((err = fopen_s(&p_input, argv[1], "r")) != 0)
 	{
 		printf("File was not opened\n");
@@ -163,9 +161,38 @@ int main(int argc, char* argv[])
 	int num_of_iter = atoi(chunk);
 	file_2_arr(p_input, forest_current, size_forest);
 
+	//
+
+	for (iter_counter = 0; iter_counter < num_of_iter; iter_counter++)	//	start iter
+	{
+		for (i = 0; i < size_forest; i++)		//run on lines
+		{
+			for (j = 0; j < size_forest; j++)		//run on col
+			{
+				if (forest_current[i * size_forest + j] == 'G')
+				{
+					Ground_Check(i, j, forest_current, forest_next, size_forest);
+				}
+				if (forest_current[i * size_forest + j] == 'F')
+				{
+					forest_next[i * size_forest + j] = 'G';
+				}
+				if (forest_current[i * size_forest + j] == 'T')
+				{
+					Fire_Check(i, j, forest_current, forest_next, size_forest);
+				}
+			}
+		}
+		p_temp = forest_current;
+		forest_current = forest_next;
+		forest_next = p_temp;
+	}
+
+	//
 
 	fclose (p_input);
 	free(forest_current);
 	free(forest_next);
 	return 0;
 }
+
