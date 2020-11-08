@@ -63,12 +63,12 @@ void file_2_arr(FILE *file,char *forest_current,int dimen)
 {
 	int i = 0;
 	char *buffer = NULL;
-	buffer =(char*)malloc(sizeof(char) *(dimen+(dimen-1)));
+	buffer =(char*)malloc(sizeof(char) * (2*dimen-1));
 	const char* delim = ",";
 	while (fgets(buffer, sizeof buffer, file))
 	{
 		char* token = strtok(buffer, delim);
-		while (token != '\n' || token!=NULL)
+		while (token != NULL)
 		{
 			printf("%s", token);
 			strcpy(forest_current, token);
