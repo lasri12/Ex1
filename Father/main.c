@@ -6,39 +6,39 @@ void Fire_Check(int i, int j, char* forest_current[], char* forest_next[], int d
 	int trigger = 0;
 	if (i != 0)
 	{
-		if (forest_current[i - 1][j] == 'F')
+		if (forest_current[(i - 1) * dimension + j] == 'F')	//check above
 		{
 			trigger = 1;
 		}
 	}
 	if (i != dimension - 1)
 	{
-		if (forest_current[i + 1][j] == 'F')
+		if (forest_current[(i + 1) * dimension + j] == 'F')	//check below
 		{
 			trigger = 1;
 		}
 	}
 	if (j != 0)
 	{
-		if (forest_current[i][j - 1] == 'F')
+		if (forest_current[i * dimension + j - 1] == 'F')		//check left
 		{
 			trigger = 1;
 		}
 	}
 	if (j != dimension - 1)
 	{
-		if (forest_current[i][j+1] == 'F')
+		if (forest_current[i * dimension + j + 1] == 'F')		//check right
 		{
 			trigger = 1;
 		}
 	}
 	if (trigger == 1)
 	{
-		forest_next[i][j] = 'F';
+		forest_next[i * dimension + j] = 'F';
 	}
 	else
 	{
-		forest_next[i][j] = 'T';
+		forest_next[i * dimension + j] = 'T';
 	}
 	return;
 }
@@ -48,15 +48,69 @@ void Ground_Check(int i, int j, char* forest_current[], char* forest_next[], int
 	int counter = 0;
 	if (i != 0)
 	{
-		if (forest_current[i - 1][j] == 'F')
+		if (forest_current[(i - 1) * dimension + j] == 'T')		//check above		
 		{
 			counter++;
 		}
 		if (j != 0)
 		{
-			if (forest_current[1]);
+			if (forest_current[(i - 1) * dimension + j - 1] == 'T')		//check up left
+			{
+				counter++;
+			}
+		}
+		if (j = !dimension - 1)
+		{
+			if (forest_current[(i - 1) * dimension + j + 1] == 'T')		//check up right
+			{
+				counter++;
+			}
 		}
 	}
+	if (j != 0)
+	{
+		if (forest_current[(i)*dimension + j - 1] == 'T')				//check left
+		{
+			counter++;
+		}
+		if (i != dimension - 1)
+		{
+			if (forest_current[(i + 1) * dimension + j - 1] == 'T')		//check left down
+			{
+				counter++;
+			}
+		}
+	}
+	if (i != dimension - 1)
+	{
+		if (forest_current[(i + 1) * dimension + j] == 'T')		//check down
+		{
+			counter++;
+		}
+		if (j != dimension - 1)
+		{
+			if (forest_current[(i + 1) * dimension + j + 1] == 'T')		//check right down
+			{
+				counter++;
+			}
+		}
+	}
+	if (j != dimension - 1)
+	{
+		if (forest_current[i * dimension + j + 1] == 'T')		//check right
+		{
+			counter++;
+		}
+	}
+	if (counter > 1)
+	{
+		forest_next[i][j] == 'T';
+	}
+	else
+	{
+		forest_next[i][j] == 'G';
+	}
+	return;
 }
 
 void file_2_arr(FILE *file,char *forest_current,int dimen)
@@ -82,6 +136,7 @@ void file_2_arr(FILE *file,char *forest_current,int dimen)
 	
 	return;
 }
+
 int main(int argc, char* argv[])
 {
 	FILE *p_input = NULL; errno_t err; char chunk[50]; char* forest_current; char* forest_next;
