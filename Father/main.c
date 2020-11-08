@@ -1,7 +1,4 @@
-#include<stdio.h>
-#include <stdlib.h>
-#include<string.h>
-
+#include "Father.h"
 
 int main(int argc, char* argv[])
 {
@@ -13,8 +10,8 @@ int main(int argc, char* argv[])
 	}
 	fgets(chunk, 50, p_input);
 	int size_forest = atoi(chunk);
-	forest_current = (int*)malloc(sizeof(int) * size_forest * size_forest );
-	forest_next = (int*)malloc(sizeof(int) * size_forest * size_forest);
+	forest_current = (char*)malloc(sizeof(char) * size_forest * size_forest );
+	forest_next = (char*)malloc(sizeof(char) * size_forest * size_forest);
 	fgets(chunk, 50, p_input);
 	int num_of_iter = atoi(chunk);
 	printf("%d, %d\n", size_forest, num_of_iter);
