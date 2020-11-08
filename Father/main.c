@@ -61,31 +61,25 @@ void Ground_Check(int i, int j, char* forest_current[], char* forest_next[], int
 
 void file_2_arr(FILE *file,char *forest_current,int dimen)
 {
+	int i = 0;
 	char *buffer = NULL;
-	buffer =(char*)malloc(sizeof(char) *dimen);
+	buffer =(char*)malloc(sizeof(char) *(dimen+(dimen-1)));
 	const char* delim = ",";
 	while (fgets(buffer, sizeof buffer, file))
 	{
 		char* token = strtok(buffer, delim);
-		while (token != '\n')
+		while (token != '\n' || token!=NULL)
 		{
-			for (int i = 0; i < dimen; i++)
-			{
-				for (int j = 0; j < dimen; j++)
-				{
-					*(forest_current + i * dimen + j)= token;
-					
-				}
-			}
+			printf("%s", token);
+			strcpy(forest_current, token);
+			token = strtok(NULL, delim);
+			forest_current++;
+			if (i == 4)
+				break;
+			i++;
 		}
 	}
-	for (int i = 0; i < dimen; i++)
-	{
-		for (int j = 0; j < dimen; j++)
-		{
-			printf("%c,", (forest_current + i * dimen + j));
-		}
-	}
+	
 	return;
 }
 int main(int argc, char* argv[])
@@ -99,7 +93,17 @@ int main(int argc, char* argv[])
 	fgets(chunk, 50, p_input);
 	int size_forest = atoi(chunk);
 	forest_current = (char*)malloc(sizeof(char) * size_forest * size_forest );
+	if (NULL == forest_current)
+	{
+		printf("allocate did not succeed");
+		exit(2);
+	}
 	forest_next = (char*)malloc(sizeof(char) * size_forest * size_forest);
+	if (NULL == forest_current)
+	{
+		printf("allocate did not succeed");
+		exit(2);
+	}
 	fgets(chunk, 50, p_input);
 	int num_of_iter = atoi(chunk);
 	file_2_arr(p_input, forest_current, size_forest);
