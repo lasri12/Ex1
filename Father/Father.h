@@ -5,6 +5,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-void Fire_Check(int i, int j, char* forest_current, char* forest_next, int dimension)
-
+void Fire_Check(int i, int j, char* forest_current, char* forest_next, int dimension);
+void file_2_arr(FILE* file, char forest_current, int dimen);
 #endif

@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Father.h"
 
 void Fire_Check(int i, int j, char* forest_current[], char* forest_next[], int dimension)
@@ -33,7 +34,11 @@ void Fire_Check(int i, int j, char* forest_current[], char* forest_next[], int d
 	}
 	if (trigger == 1)
 	{
-		forest_next[i][j] == 'F';
+		forest_next[i][j] = 'F';
+	}
+	else
+	{
+		forest_next[i][j] = 'T';
 	}
 	return;
 }
@@ -49,11 +54,40 @@ void Ground_Check(int i, int j, char* forest_current[], char* forest_next[], int
 		}
 		if (j != 0)
 		{
-			if (forest_current[])
+			if (forest_current[1]);
 		}
 	}
 }
 
+void file_2_arr(FILE *file,char *forest_current,int dimen)
+{
+	char *buffer = NULL;
+	buffer =(char*)malloc(sizeof(char) *dimen);
+	const char* delim = ",";
+	while (fgets(buffer, sizeof buffer, file))
+	{
+		char* token = strtok(buffer, delim);
+		while (token != '\n')
+		{
+			for (int i = 0; i < dimen; i++)
+			{
+				for (int j = 0; j < dimen; j++)
+				{
+					*(forest_current + i * dimen + j)= token;
+					
+				}
+			}
+		}
+	}
+	for (int i = 0; i < dimen; i++)
+	{
+		for (int j = 0; j < dimen; j++)
+		{
+			printf("%c,", (forest_current + i * dimen + j));
+		}
+	}
+	return;
+}
 int main(int argc, char* argv[])
 {
 	FILE *p_input = NULL; errno_t err; char chunk[50]; char* forest_current; char* forest_next;
@@ -68,7 +102,7 @@ int main(int argc, char* argv[])
 	forest_next = (char*)malloc(sizeof(char) * size_forest * size_forest);
 	fgets(chunk, 50, p_input);
 	int num_of_iter = atoi(chunk);
-
+	file_2_arr(p_input, forest_current, size_forest);
 
 
 	fclose (p_input);
