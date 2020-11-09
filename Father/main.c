@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Father.h"
 
-void Fire_Check(int i, int j, char* forest_current[], char* forest_next[], int dimension)
+void Fire_Check(int i, int j, char* forest_current, char* forest_next, int dimension)
 {
 	int trigger = 0;
 	if (i != 0)
@@ -20,7 +20,7 @@ void Fire_Check(int i, int j, char* forest_current[], char* forest_next[], int d
 	}
 	if (j != 0)
 	{
-		if (forest_current[i * dimension + j - 1] == 'F')		//check left
+		if (forest_current[i * dimension + j - 1] == ' F')		//check left
 		{
 			trigger = 1;
 		}
@@ -43,7 +43,7 @@ void Fire_Check(int i, int j, char* forest_current[], char* forest_next[], int d
 	return;
 }
 
-void Ground_Check(int i, int j, char* forest_current[], char* forest_next[], int dimension)
+void Ground_Check(int i, int j, char* forest_current, char* forest_next, int dimension)
 {
 	int counter = 0;
 	if (i != 0)
@@ -69,7 +69,7 @@ void Ground_Check(int i, int j, char* forest_current[], char* forest_next[], int
 	}
 	if (j != 0)
 	{
-		if (forest_current[(i)*dimension + j - 1] == 'T')				//check left
+		if (forest_current[i*dimension + j - 1] == 'T')				//check left
 		{
 			counter++;
 		}
@@ -104,33 +104,36 @@ void Ground_Check(int i, int j, char* forest_current[], char* forest_next[], int
 	}
 	if (counter > 1)
 	{
-		forest_next[i][j] == 'T';
+		forest_next[i*dimension +j] = 'T';
 	}
 	else
 	{
-		forest_next[i][j] == 'G';
+		forest_next[i*dimension +j] = 'G';
 	}
 	return;
 }
 
-void file_2_arr(FILE *file,char *forest_current,int dimen)
+void file_2_arr(FILE* file, char* forest_current, int dimen)
 {
-	int i = 0;
-	char *buffer = NULL;
-	buffer =(char*)malloc(sizeof(char) * (dimen*dimen));
-	const char* delim = ",";
-	while (fgets(buffer, sizeof buffer, file))
-	{
-		char* token = strtok(buffer, delim);
-		while (token != NULL)
-		{
-			strcpy(forest_current, token);
-			token = strtok(NULL, delim);
-			forest_current++;
+
+	while (1) {
+		int chr = fgetc(file);
+		if (chr == EOF)
+			break;
+
+		switch (chr) {
+		case ',':
+		case '\n':
+			break;
+		default:
+			*forest_current++ = chr;
+			break;
 		}
 	}
-	
-	return;
+
+#if 0
+	* forest_current = 0;
+#endif
 }
 
 int main(int argc, char* argv[])
@@ -160,11 +163,11 @@ int main(int argc, char* argv[])
 	fgets(chunk, 50, p_input);
 	int num_of_iter = atoi(chunk);
 	file_2_arr(p_input, forest_current, size_forest);
-
-	//
+	
 
 	for (iter_counter = 0; iter_counter < num_of_iter; iter_counter++)	//	start iter
 	{
+		
 		for (i = 0; i < size_forest; i++)		//run on lines
 		{
 			for (j = 0; j < size_forest; j++)		//run on col
@@ -173,14 +176,17 @@ int main(int argc, char* argv[])
 				{
 					Ground_Check(i, j, forest_current, forest_next, size_forest);
 				}
-				if (forest_current[i * size_forest + j] == 'F')
+				else if (forest_current[i * size_forest + j] == 'F')
 				{
 					forest_next[i * size_forest + j] = 'G';
 				}
-				if (forest_current[i * size_forest + j] == 'T')
+				else if (forest_current[i * size_forest + j] == 'T')
 				{
 					Fire_Check(i, j, forest_current, forest_next, size_forest);
 				}
+				//
+				printf("i=%d, j=%d, current letter=%c, next_letter=%c\n", i, j, forest_current[i * size_forest + j], forest_next[i * size_forest + j]);
+				//
 			}
 		}
 		p_temp = forest_current;
@@ -188,11 +194,9 @@ int main(int argc, char* argv[])
 		forest_next = p_temp;
 	}
 
-	//
 
 	fclose (p_input);
 	free(forest_current);
 	free(forest_next);
 	return 0;
 }
-
