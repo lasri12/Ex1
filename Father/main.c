@@ -20,7 +20,7 @@ void Fire_Check(int i, int j, char* forest_current, char* forest_next, int dimen
 	}
 	if (j != 0)
 	{
-		if (forest_current[i * dimension + j - 1] == ' F')		//check left
+		if (forest_current[i * dimension + j - 1] == 'F')		//check left
 		{
 			trigger = 1;
 		}
@@ -132,11 +132,47 @@ void file_2_arr(FILE* file, char* forest_current, int dimen)
 	}
 }
 
+void simulation(int dimen,int iteration_num, char* forest_cur, char* forest_next,FILE *p_out)
+{
+	char* p_temp; int k=0;
+	for (int iter_counter = 0; iter_counter < iteration_num; iter_counter++)	//	start iter
+	{
+		for (int i = 0; i < dimen; i++)		//run on lines
+		{
+			for (int j = 0; j < dimen; j++)		//run on col
+			{
+				if (forest_cur[i * dimen + j] == 'G')
+				{
+					Ground_Check(i, j, forest_cur, forest_next, dimen);
+				}
+				else if (forest_cur[i * dimen + j] == 'F')
+				{
+					forest_next[i * dimen + j] = 'G';
+				}
+				else
+				{
+					Fire_Check(i, j, forest_cur, forest_next, dimen);
+				}
+			}
+		}
+		while (k < dimen * dimen)
+		{
+			fputc(forest_cur[k], p_out);
+			k++;
+		}
+		k = 0;
+		fputs(" - ", p_out);// to add number of firesssssss
+		fputs("\n", p_out);
+		p_temp = forest_cur;
+		forest_cur = forest_next;
+		forest_next = p_temp;
+	}
+	return;
+}
 int main(int argc, char* argv[])
 {
-	FILE* p_input = NULL; errno_t err; char chunk[50]; char *forest_current; char *forest_next; char *p_temp;
+	FILE* p_input = NULL; FILE* p_output=NULL;errno_t err; char chunk[50]; char* forest_current; char* forest_next;
 	int iter_counter = 0;
-	int i = 0, j = 0;
 	if ((err = fopen_s(&p_input, argv[1], "r")) != 0)
 	{
 		printf("File was not opened\n");
@@ -159,41 +195,17 @@ int main(int argc, char* argv[])
 	fgets(chunk, 50, p_input);
 	int num_of_iter = atoi(chunk);
 	file_2_arr(p_input, forest_current, size_forest);
-	
-	for (iter_counter = 0; iter_counter < num_of_iter; iter_counter++)	//	start iter
+	p_output = fopen("output.txt", "w");
+	if (p_output == NULL)
 	{
-		for (i = 0; i < size_forest; i++)		//run on lines
-		{
-			for (j = 0; j < size_forest; j++)		//run on col
-			{
-				if (forest_current[i * size_forest + j] == 'G')
-				{
-					Ground_Check(i, j, forest_current, forest_next, size_forest);
-				}
-				else if (forest_current[i * size_forest + j] == 'F')
-				{
-					forest_next[i * size_forest + j] = 'G';
-				}
-				else
-				{
-					Fire_Check(i, j, forest_current, forest_next, size_forest);
-				}
-			}
-		}
-		int k = 0;
-		while (k<16)
-		{
-			printf("%c", forest_next[k]);
-			k++;
-		}
-		printf("\n");
-		p_temp = forest_current;
-		forest_current = forest_next;
-		forest_next = p_temp;
+		printf("output file didn't open\n");
+		exit(2);
 	}
+	simulation(size_forest, num_of_iter, forest_current, forest_next, p_output);
 	
 
 	fclose (p_input);
+	fclose(p_output);
 	free(forest_current);
 	free(forest_next);
 	return 0;

@@ -1,6 +1,7 @@
-4
 5
-T,G,F,F
-G,T,T,F
-G,T,F,G
-T,F,G,T
+8
+G,T,F,F,F
+T,T,F,G,F
+G,G,G,F,G
+G,G,F,T,T
+T,F,G,F,F
