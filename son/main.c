@@ -1,5 +1,4 @@
-#include<stdio.h>
-#include<string.h>
+#include "son.h"
 
 int Count_Burn(char* p_char)
 {
